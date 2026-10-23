@@ -1,0 +1,110 @@
+{
+  "pipeline_version": "1.2",
+  "normalization": "Unicode NFC; remove format/control characters; collapse whitespace",
+  "near_duplicate_method": "64-bit SimHash over character 5-grams; candidate lookup by eight 8-bit bands; near duplicate requires Hamming distance <= 6, character 5-gram Jaccard >= 0.82, and identical numeric-token sequences after removing digits inside @handles and URLs",
+  "near_duplicate_threshold_hamming": 6,
+  "near_duplicate_threshold_jaccard": 0.82,
+  "near_duplicate_require_same_numeric_tokens": true,
+  "evaluation_leakage_thresholds": {
+    "simhash_hamming_max": 16,
+    "char5gram_jaccard_min": 0.7,
+    "numeric_token_sequences_must_match": true,
+    "numeric_tokens_ignore_handles_and_urls": true,
+    "candidate_search": "compare every selected training row against all 200 eval vectors; no band-retrieval recall gap",
+    "note": "More permissive than corpus near-deduplication; separate candidate and conservative removal gate."
+  },
+  "pii": "email, Indian Aadhaar-like 12 digit, PAN, Indian phone; replaced with placeholders",
+  "inputs": [
+    {
+      "path": "hinglish/PHINC.csv",
+      "sha256": "325ba383cd6d73e0c3128885e2a79133e612ec03d18c8b55506d0b4b12ec68ed",
+      "bytes": 2125039
+    },
+    {
+      "path": "wiki/hiwiki-20261001-pages-articles-multistream.xml.bz2",
+      "sha256": "a10c4915880277d518585c74ee294fd8d6e8158f85bc2ec07a0b83e94e2234c3",
+      "bytes": 251878194
+    }
+  ],
+  "counts": {
+    "input": 260540,
+    "normalized": 26000,
+    "quality_pass": 25658,
+    "kept": 23691,
+    "heldout": 200,
+    "dropped_exact": 1727,
+    "dropped_near": 240,
+    "dropped_contamination": 2,
+    "contamination_train_docs": 2,
+    "dropped_collection_cap": 234540,
+    "dropped_quality": 140,
+    "eval_items_affected": 2
+  },
+  "counts_by_language": {
+    "en:eval_holdout": 25,
+    "en:exact_drop": 5,
+    "en:input": 3410,
+    "en:kept": 1309,
+    "en:near_drop": 1,
+    "en:normalized": 1340,
+    "en:quality_pass": 1315,
+    "en:selected": 1340,
+    "en:source_cap_drop": 2070,
+    "hi:eval_holdout": 2,
+    "hi:exact_drop": 1720,
+    "hi:input": 245608,
+    "hi:kept": 17868,
+    "hi:near_drop": 236,
+    "hi:normalized": 19826,
+    "hi:quality_pass": 19824,
+    "hi:selected": 19826,
+    "hi:source_cap_drop": 225782,
+    "hi-Latn:contamination_drop": 2,
+    "hi-Latn:eval_holdout": 173,
+    "hi-Latn:exact_drop": 2,
+    "hi-Latn:input": 11382,
+    "hi-Latn:kept": 4514,
+    "hi-Latn:near_drop": 3,
+    "hi-Latn:normalized": 4694,
+    "hi-Latn:quality_pass": 4519,
+    "hi-Latn:selected": 4694,
+    "hi-Latn:source_cap_drop": 6688,
+    "other:input": 140,
+    "other:normalized": 140,
+    "other:quality_drop": 140,
+    "other:selected": 140
+  },
+  "counts_by_source": {
+    "hinglish": 13738,
+    "wiki": 246802
+  },
+  "selection_policy": {
+    "wiki_max_selected_records": 20000,
+    "hinglish_max_selected_records": 6000,
+    "selection_order": "first 20,000 namespace-0 wiki pages with text and first 6,000 PHINC logical records in pinned source order; all later source records are streamed to ledger as source_quota drops"
+  },
+  "near_duplicate_examples": "near_duplicate_examples.jsonl",
+  "eval_candidate_reviews": "eval_candidate_reviews.jsonl",
+  "eval_items": 200,
+  "reproducibility": "Each invocation builds a fresh staging directory, writes deterministic JSONL in sorted file/input order, then atomically swaps the completed directory into place. Interrupted staging is not treated as output; rerun replaces it.",
+  "sources": [
+    {
+      "name": "PHINC Hinglish corpus",
+      "url": "https://huggingface.co/datasets/LingoIITGN/PHINC/resolve/44b5471df75e508b9d6fcdbcc93df04bb1e84056/PHINC.csv",
+      "license": "CC BY 4.0 (per dataset card)",
+      "path": "raw/hinglish/PHINC.csv",
+      "download_recorded_utc": "2026-10-23T11:20:10.630388+00:00",
+      "bytes": 2125039,
+      "sha256": "325ba383cd6d73e0c3128885e2a79133e612ec03d18c8b55506d0b4b12ec68ed"
+    },
+    {
+      "name": "Hindi Wikipedia current pages-articles dump",
+      "url": "https://dumps.wikimedia.org/hiwiki/20261001/hiwiki-20261001-pages-articles-multistream.xml.bz2",
+      "license": "CC BY-SA 4.0 (Wikipedia text; attribution/share-alike required)",
+      "path": "raw/wiki/hiwiki-20261001-pages-articles-multistream.xml.bz2",
+      "download_recorded_utc": "2026-10-23T11:20:10.724778+00:00",
+      "bytes": 251878194,
+      "sha256": "a10c4915880277d518585c74ee294fd8d6e8158f85bc2ec07a0b83e94e2234c3"
+    }
+  ]
+}
